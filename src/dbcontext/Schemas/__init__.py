@@ -1,1 +1,1 @@
-from .userDocument import UserDocument
+from .userDocument import UserDocument, Weapon

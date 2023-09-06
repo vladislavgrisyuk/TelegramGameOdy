@@ -1,17 +1,39 @@
 from models import UserModel
-
-__users__ = []
-__users__.append(UserModel(380472185, 'enmu', 23))
-__users__.append(UserModel(2, 'jezus', 4))
-__users__.append(UserModel(3, 'marley', 1))
+from dbcontext import MongoContext
+from models import UserModel
+from dbcontext.Schemas import UserDocument
+from bson import ObjectId
+db = MongoContext()
 
 
 class UserRepository:
     def __init__(self):
         pass
     
-    def getUserById(self, id: int) -> UserModel:
-        #return [e for e in __users__ if e.id == id]
-        return next(filter(lambda x: x.id == id, __users__))
+    def getUserByTelegramId(self, telegramId:int) -> UserModel:
+        usDoc:UserDocument = UserDocument.objects(telegramId=telegramId).first()
+        usModel:UserModel = UserModel(
+            usDoc.id,
+            'name',
+            usDoc.level,
+            usDoc.attack,
+            usDoc.defense,
+            usDoc.stamina,
+            usDoc.money,
+            usDoc.health,
+            usDoc.exp,
+        )
+        
+        return usModel
+    
+    def AddItem(self, userId:int, objectId:str):
+        user:UserDocument = UserDocument.objects(telegramId=userId).first()
+        if(user):
+            user.items.append(ObjectId(objectId))
+            user.save()
+            
+        
+            
+    
     
     
